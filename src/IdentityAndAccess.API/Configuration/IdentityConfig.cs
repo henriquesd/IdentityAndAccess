@@ -19,7 +19,7 @@ namespace IdentityAndAccess.API.Configuration
             services.AddDefaultIdentity<IdentityUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders(); // Adds the default token providers used to generate tokens for reset passwords, change email and change telephone number operations, and for two factor authentication token generation.
 
             // JWT
 
@@ -43,7 +43,7 @@ namespace IdentityAndAccess.API.Configuration
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = true,
                     ValidateAudience = true,
-                    // ValidAudience = 
+                    ValidAudience = appSettings.Audience,
                     ValidIssuer = appSettings.Issuer
                 };
             });
