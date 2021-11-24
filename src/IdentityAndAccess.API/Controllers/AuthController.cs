@@ -101,7 +101,13 @@ namespace IdentityAndAccess.API.Controllers
             var response = new LoginResponseDto
             {
                 AccessToken = encodedToken,
-                ExpiresIn = TimeSpan.FromHours(_appSettings.ExpirationHours).TotalSeconds
+                ExpiresIn = TimeSpan.FromHours(_appSettings.ExpirationHours).TotalSeconds,
+                UserToken = new UserTokenDto
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Claims = claims.Select(c => new ClaimDto { Type = c.Type, Value = c.Value})
+                }
             };
             return response;
         }
