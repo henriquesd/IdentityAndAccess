@@ -10,7 +10,7 @@ Web API Project using .NET 6
 ## Commands
 
 ### Creating a new migration
-- To add a migration, select the API project and execute `add-migration Migration_Name -Context ApplicationDbContext`
+- To add a migration, select the API project and execute `add-migration Migration_Name -Context Context_Name`
 
 ### Updating the database
-- To run a migration, select the API project and execute `update-database -Context ApplicationDbContext`
+- To run a migration, select the API project and execute `update-database -Context Context_Name`
