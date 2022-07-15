@@ -33,9 +33,9 @@ namespace IdentityAndAccess.API.Controllers
             .ToArray();
         }
 
-        [HttpGet("GetForAdmin")]
-        [Authorize(Roles = "Admin")]
-        public IEnumerable<WeatherForecast> GetForAdmin()
+        [HttpGet("GetForAdminAndUser")]
+        [Authorize(Roles = "Admin, User")]
+        public IEnumerable<WeatherForecast> GetForAdminAndUser()
         {
             return Enumerable.Range(1, 10).Select(index => new WeatherForecast
             {
@@ -58,6 +58,19 @@ namespace IdentityAndAccess.API.Controllers
             })
             .ToArray();
         }
+
+        [Authorize(Policy = "CanRead")]
+        public IEnumerable<WeatherForecast> PolicyCanRead()
+        {
+            return Enumerable.Range(1, 10).Select(index => new WeatherForecast
+            {
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            })
+            .ToArray();
+        }
+
 
         [AllowAnonymous]
         [HttpGet("GetAnonymous")]
