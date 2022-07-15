@@ -1,4 +1,3 @@
-using IdentityAndAccess.API.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +20,19 @@ namespace IdentityAndAccess.API.Controllers
             _logger = logger;
         }
 
+        [AllowAnonymous]
+        [HttpGet("GetAnonymous")]
+        public IEnumerable<WeatherForecast> GetAnonymous()
+        {
+            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            })
+            .ToArray();
+        }
+
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
@@ -33,9 +45,9 @@ namespace IdentityAndAccess.API.Controllers
             .ToArray();
         }
 
-        [HttpGet("GetForAdminAndUser")]
-        [Authorize(Roles = "Admin, User")]
-        public IEnumerable<WeatherForecast> GetForAdminAndUser()
+        [HttpGet("GetForAdminAndManagerRoles")]
+        [Authorize(Roles = "Admin, Manager")]
+        public IEnumerable<WeatherForecast> GetForAdminAndManagerRoles()
         {
             return Enumerable.Range(1, 10).Select(index => new WeatherForecast
             {
@@ -46,44 +58,19 @@ namespace IdentityAndAccess.API.Controllers
             .ToArray();
         }
 
-        [HttpGet("GetForUserWithReadPermission")]
-        [ClaimsAuthorize("User", "Read")]
-        public IEnumerable<WeatherForecast> GetForUserWithReadPermission()
+        [HttpPost]
+        [Authorize(Policy = "CanCreate")]
+        public IActionResult Create()
         {
-            return Enumerable.Range(1, 10).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+            return Ok();
         }
 
-        [HttpGet("PolicyCanRead")]
-        [Authorize(Policy = "CanRead")]
-        public IEnumerable<WeatherForecast> PolicyCanRead()
+        [HttpDelete]
+        [Authorize(Policy = "CanDelete")]
+        //[ClaimsAuthorize("Admin", "CanDelete")] // example of another approach;
+        public IActionResult Delete()
         {
-            return Enumerable.Range(1, 10).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
-        }
-
-
-        [AllowAnonymous]
-        [HttpGet("GetAnonymous")]
-        public IEnumerable<WeatherForecast> GetAnonymous()
-        {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+            return Ok();
         }
     }
 }
