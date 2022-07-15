@@ -59,6 +59,7 @@ namespace IdentityAndAccess.API.Controllers
             .ToArray();
         }
 
+        [HttpGet("PolicyCanRead")]
         [Authorize(Policy = "CanRead")]
         public IEnumerable<WeatherForecast> PolicyCanRead()
         {
