@@ -34,8 +34,21 @@ namespace IdentityAndAccess.API.Controllers
         }
 
         [HttpGet("GetForAdmin")]
-        [ClaimsAuthorize("Admin", "Read")]
+        [Authorize(Roles = "Admin")]
         public IEnumerable<WeatherForecast> GetForAdmin()
+        {
+            return Enumerable.Range(1, 10).Select(index => new WeatherForecast
+            {
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            })
+            .ToArray();
+        }
+
+        [HttpGet("GetForUserWithReadPermission")]
+        [ClaimsAuthorize("User", "Read")]
+        public IEnumerable<WeatherForecast> GetForUserWithReadPermission()
         {
             return Enumerable.Range(1, 10).Select(index => new WeatherForecast
             {
