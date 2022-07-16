@@ -19,6 +19,17 @@ For example, if a user is not logged in the application, and tries to access som
 Authorization is the process of determining whether a user has access to a resource. Once the user is authenticated, the app will validate that the user has the permission to access the resource.
 For example, if a user is authenticated in the application, but does not have permission to access some resource, when trying to access it, it will return a 403 (Forbidden) error, which means that the application knows who the user is, but the user does not have permission to access the resource.
 
+## Roles and Claims
+For Authorization, it's possible to use Roles, Claims, or use both together.
+
+### Roles
+Roles are about the roles that a user has.
+For example, a user might have a role of "User", a role of "Manager", etc.
+
+### Claims
+Claims are more flexible than Roles, they are a name value pair.
+Claims based authorization checks the value of a claim and allows access to a resource based upon that value. An identity can contain multiple claims with multiple values and can contain multiple claims of the same type.
+
 ## Commands
 
 ### Creating a new migration
