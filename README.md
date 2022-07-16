@@ -8,6 +8,17 @@ Web API Project using .NET 6
 - Swagger
 - SQL Server
 
+
+## Authentication and Authorization
+
+### Authentication
+Authentication is the process of determining a user's identity. When the user is authenticated, it means that the application knows who the user is.
+For example, if a user is not logged in the application, and tries to access something that it's only available when the user is authenticated, it will return a 401 (Unauthorized) error, which means that the application doesn't know who is trying to access the resource.
+
+### Authorization
+Authorization is the process of determining whether a user has access to a resource. Once the user is authenticated, the app will validate that the user has the permission to access the resource.
+For example, if a user is authenticated in the application, but does not have permission to access some resource, when trying to access it, it will return a 403 (Forbidden) error, which means that the application knows who the user is, but the user does not have permission to access the resource.
+
 ## Commands
 
 ### Creating a new migration
@@ -15,3 +26,10 @@ Web API Project using .NET 6
 
 ### Updating the database
 - To run a migration, select the API/Infrastructure project and execute `update-database -Context Context_Name`
+
+
+## References
+-   **ASP.NET Core security topics - Microsoft Documentation**  
+    [https://docs.microsoft.com/en-us/aspnet/core/security/?view=aspnetcore-6.0](https://docs.microsoft.com/en-us/aspnet/core/security/?view=aspnetcore-6.0)
+
+
