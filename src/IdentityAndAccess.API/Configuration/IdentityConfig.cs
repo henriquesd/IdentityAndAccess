@@ -1,5 +1,7 @@
-﻿using IdentityAndAccess.API.Data;
+﻿using IdentityAndAccess.API.Constants;
+using IdentityAndAccess.API.Data;
 using IdentityAndAccess.API.Extensions;
+using IdentityAndAccess.API.PolicyRequirements;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -24,10 +26,20 @@ namespace IdentityAndAccess.API.Configuration
 
             services.AddAuthorization(options =>
             {
+                #region Example using Policy with claims:
+                // In this policy configuration example, if ClaimValue is 'CanRead, CanCreate, CanUpdate', it will not allow access when the policy "CanDelete" is necessary,
+                // it will only allow access when ClaimValue is exactly "CanDelete";
                 options.AddPolicy("CanDelete", policy => policy.RequireClaim("CanDelete"));
 
+                // In this policy configuration example, if ClaimValue is 'CanRead, CanCreate, CanUpdate', it will allow access when the policy "CanRead" is necessary;
                 options.AddPolicy("CanRead", policy => policy.Requirements.Add(new NecessaryPermission("CanRead")));
-                options.AddPolicy("CanCreate", policy => policy.Requirements.Add(new NecessaryPermission("CanCreate")));
+                #endregion
+
+                #region Example using Policy requirement:
+                options.AddPolicy(Policies.WorkingHours, policy =>
+                    policy.Requirements.Add(new WorkingHoursRequirement()));
+                #endregion
+
             });
 
             services.AddSingleton<IAuthorizationHandler, NecessaryPermissionHandler>();
@@ -60,6 +72,16 @@ namespace IdentityAndAccess.API.Configuration
             });
 
             return services;
+        }
+
+        public static void AddAuthorizationPolicies(this IServiceCollection services)
+        {
+            services.AddSingleton<IAuthorizationHandler, WorkingHoursHandler>();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Policies.WorkingHours, policy =>
+                    policy.Requirements.Add(new WorkingHoursRequirement()));
+            });
         }
     }
 }

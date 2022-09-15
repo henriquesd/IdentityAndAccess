@@ -1,3 +1,5 @@
+using IdentityAndAccess.API.Constants;
+using IdentityAndAccess.API.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,7 +48,8 @@ namespace IdentityAndAccess.API.Controllers
         }
 
         [HttpGet("GetForAdminAndManagerRoles")]
-        [Authorize(Roles = "Admin, Manager")]
+        [Authorize(Roles = $"{Roles.Admin}, {Roles.Manager}")]
+        //[Authorize(Roles = "Admin, Manager")] // example of another approach;
         public IEnumerable<WeatherForecast> GetForAdminAndManagerRoles()
         {
             return Enumerable.Range(1, 10).Select(index => new WeatherForecast
@@ -58,19 +61,47 @@ namespace IdentityAndAccess.API.Controllers
             .ToArray();
         }
 
-        [HttpPost]
-        [Authorize(Policy = "CanCreate")]
-        public IActionResult Create()
+        [HttpGet("GetWithCanReadPermission")]
+        // In this example, if ClaimValue is 'CanRead, CanCreate, CanUpdate', it will not work,
+        // the ClaimValue must be 'CanRead';
+        [ClaimsAuthorize(ClaimTypes.Permission, "CanRead")]
+        public IActionResult GetWithCanReadPermission()
         {
             return Ok();
         }
+        
+        #region Policy examples
+        [HttpGet("GetForWorkingHoursPolicy")]
+        [Authorize(Policy = Policies.WorkingHours)]
+        public IEnumerable<WeatherForecast> GetForWorkingHoursPolicy()
+        {
+            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            })
+            .ToArray();
+        }
 
         [HttpDelete]
+        // In this example, if ClaimValue is 'CanRead, CanCreate, CanUpdate', it will not allow access, the ClaimValue must be exactly 'CanDelete',
+        // check IdentityConfig file for more information;
         [Authorize(Policy = "CanDelete")]
         //[ClaimsAuthorize("Admin", "CanDelete")] // example of another approach;
         public IActionResult Delete()
         {
             return Ok();
         }
+
+        [HttpGet("GetWithCanReadClaim")]
+        // In this example, if ClaimValue is 'CanRead, CanCreate, CanUpdate', it will allow access,
+        // check IdentityConfig file for more information;
+        [Authorize(Policy = "CanRead")]
+        public IActionResult GetWithCanReadPolicy()
+        {
+            return Ok();
+        }
+        #endregion
     }
 }

@@ -43,6 +43,7 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1"
     });
 });
+builder.Services.AddAuthorizationPolicies();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<IdentityAndAccessDbContext>(x => x.UseSqlServer(connectionString));

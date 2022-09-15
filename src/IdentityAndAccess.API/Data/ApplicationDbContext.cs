@@ -46,7 +46,6 @@ namespace IdentityAndAccess.API.Data
 
             modelBuilder.Entity<IdentityUser>().HasData(admin);
 
-
             var user = new IdentityUser()
             {
                 Id = DemoCommonUserId,

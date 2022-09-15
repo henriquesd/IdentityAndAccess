@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using IdentityAndAccess.API.Constants;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IdentityAndAccess.API.Extensions
 {
@@ -16,7 +17,7 @@ namespace IdentityAndAccess.API.Extensions
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, NecessaryPermission requirement)
         {
-            if (context.User.HasClaim(c => c.Type == "Permission" && c.Value.Contains(requirement.Permission)))
+            if (context.User.HasClaim(c => c.Type == ClaimTypes.Permission && c.Value.Contains(requirement.Permission)))
             {
                 context.Succeed(requirement);
             }
